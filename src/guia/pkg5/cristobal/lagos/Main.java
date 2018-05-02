@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Scanner;
 import ClasesEInterfaces.*;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 /**
  *
@@ -25,11 +24,14 @@ public class Main {
         int opcion = -1;
         while (opcion != 0){
             System.out.println("Ingrese la opcion:\n"
-                    + "1 - Agregar los detalles de una venta");
+                    + "1 - Agregar los detalles de una venta\n"
+                    + "0 - Terminar");
             opcion = new Validator().validacionInt();
             switch (opcion){
                 case 1:
                     agregarVenta();
+                    break;
+                case 0:
                     break;
                 default:
                     break;
@@ -50,6 +52,7 @@ public class Main {
     private static void agregarVenta() {
         Buscador buscador = new Buscador();
         List <Viaje> viajesCompatibles = viajes;
+        List<Viaje> backUpViajesCompatibles = new ArrayList();
         System.out.println("Pasajes disponibles: ");
         buscador.printViajesCompatibles(viajesCompatibles);
         String tipoDePasaje = "";
@@ -84,6 +87,7 @@ public class Main {
             System.out.print("Ingrese la ciudad de destino: ");
             String ciudadDeDestino = std.nextLine();
             viajesCompatibles = buscador.buscarViajesPorCiudadDeDestino(viajesCompatibles, ciudadDeDestino);
+            backUpViajesCompatibles = viajesCompatibles;
             buscador.printViajesCompatibles(viajesCompatibles);
         }
         if (viajesCompatibles.size() > 1){
@@ -105,9 +109,21 @@ public class Main {
         if (viajesCompatibles.isEmpty()){
             System.out.println("No hay ningun viaje que coincida con esos requisitos.");
             System.out.println("-----------------------------------------------------");
+            if (!backUpViajesCompatibles.isEmpty()){
+                System.out.print("Desea seleccionar un viaje similar de categoria o franja horaria distinta? (Si/No): ");
+                if (new Validator().validacionSiNo())
+                    while (viajesCompatibles.size() != 1){
+                        buscador.printViajesCompatibles(backUpViajesCompatibles);
+                        int id = new Validator().validacionInt();
+                        for (Viaje v:backUpViajesCompatibles)
+                            if (v.getId() == id)
+                                viajesCompatibles.add(v);
+                    }
+            }
         }
         if (viajesCompatibles.size() > 1){
             while (viajesCompatibles.size() > 1){
+                buscador.printShortViajesCompatibles(viajesCompatibles);
                 System.out.println("Hay mas de un viaje que coincide con esas caracteristicas.\n"
                         + "Por favor ingrese el ID del viaje que mejor se adecue a su pasaje");
                 int id = new Validator().validacionInt();
@@ -128,17 +144,17 @@ public class Main {
                     System.out.print("Ingrese la cantidad de pasajes: ");
                     cantidadDePasajes = new Validator().validacionInt();
                 }
+                for (int i = 0; i<cantidadDePasajes; i++){
                 if (viajesCompatibles.get(0) instanceof ViajeAereo)
-                    pasajes.add(new PasajeAereo(maxIdMasUno((List<Object>)(Object)pasajes), seleccionarAsiento(viajesCompatibles.get(0)), 1, null, viajesCompatibles.get(0), null));
+                    pasajes.add(new PasajeAereo(maxIdMasUno((List<Object>)(Object)pasajes), seleccionarAsiento(viajesCompatibles.get(0)), null, viajesCompatibles.get(0), null));
                 if (viajesCompatibles.get(0) instanceof ViajeTerrestre)
-                    pasajes.add(new PasajeTerrestre(maxIdMasUno((List<Object>)(Object)pasajes), seleccionarAsiento(viajesCompatibles.get(0)), 1, null, viajesCompatibles.get(0), null));
+                    pasajes.add(new PasajeTerrestre(maxIdMasUno((List<Object>)(Object)pasajes), seleccionarAsiento(viajesCompatibles.get(0)), null, viajesCompatibles.get(0), null));
+                buscador.printShortViajesCompatibles(viajesCompatibles);
+                }
             }
             else
                 System.out.println("La reserva del pasaje ha sido cancelada.");
         }
-        
-
-
     }
 
     /**
@@ -165,15 +181,15 @@ public class Main {
                 System.out.println(a.toString());
         }
         while (asientoDeseado == null){
-            System.out.print("Ingrese el nombre o descripcion del asiento deseado: ");
+            System.out.print("Ingrese el nombre o descripcion del asiento deseado para el pasaje " + (maxIdMasUno((List<Object>)(Object)pasajes)+1) +  ": ");
             String descripcion = std.nextLine().toLowerCase();
             for (Asiento a:viaje.getAsientos()){
+                if (a.getDescripcion().toLowerCase().equals(descripcion) && a.isOcupado() == true){
+                    System.out.println("Ese asiento esta ocupado.");
+                }
                 if (a.getDescripcion().toLowerCase().equals(descripcion) && a.isOcupado() == false){
                     asientoDeseado = a;
                     a.setOcupado(true);
-                }
-                if (a.getDescripcion().toLowerCase().equals(descripcion) && a.isOcupado() == true){
-                    System.out.println("Ese asiento esta ocupado.");
                 }
             }
         }
