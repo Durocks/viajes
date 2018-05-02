@@ -44,52 +44,43 @@ public class Main {
         empresasDeViajes.add(new EmpresaDeViajes(3, "LAN", 478232193));
         empresasDeViajes.add(new EmpresaDeViajes(4, "Abeja Bus", 917223493));
         
-        viajes.addAll(AgregadorDeViajes.agregadorDeViajes(viajes, empresasDeViajes));
-        for (Viaje v:viajes)
-            System.out.println(v.toString());
+        new AgregadorDeViajes().agregadorDeViajes(viajes, empresasDeViajes);
     }
 
     private static void agregarVenta() {
         Buscador buscador = new Buscador();
         List <Viaje> viajesCompatibles = new ArrayList();
-        for (Viaje v:viajes) System.out.println(v.toString());
-        System.out.println("-------------------------------------");
         String tipoDePasaje = "";
         while (!tipoDePasaje.toLowerCase().equals("aereo") && !tipoDePasaje.toLowerCase().equals("terrestre")){
             System.out.print("Se trata de un pasaje aereo o terrestre?: ");
             tipoDePasaje = std.nextLine();
         }
+        buscador.printViajesCompatibles(viajes);
         if (tipoDePasaje.toLowerCase().equals("aereo")){
             viajesCompatibles = buscador.buscarViajesAereos(viajes);
-            for (Viaje v:viajesCompatibles) System.out.println(v.toString());
-            System.out.println("-------------------------------------");
+            buscador.printViajesCompatibles(viajesCompatibles);
         }
         if (tipoDePasaje.toLowerCase().equals("terrestre")){
             viajesCompatibles = buscador.buscarViajesTerrestres(viajes);
-            for (Viaje v:viajesCompatibles) System.out.println(v.toString());
-            System.out.println("-------------------------------------");
+            buscador.printViajesCompatibles(viajesCompatibles);
         }
-        Calendar fechaPartida = GregorianCalendar.getInstance();
+        Calendar fechaPartida;
         System.out.println("Ingrese la fecha de partida: ");
         fechaPartida = new Validator().validacionFecha();
         viajesCompatibles = buscador.buscarViajesPorFecha(viajesCompatibles, fechaPartida);
-        for (Viaje v:viajesCompatibles) System.out.println(v.toString());
-        System.out.println("-------------------------------------");
+        buscador.printViajesCompatibles(viajesCompatibles);
         System.out.print("Ingrese la ciudad de partida: ");
         String ciudadDePartida = std.nextLine();
         viajesCompatibles = buscador.buscarViajesPorCiudadDePartida(viajesCompatibles, ciudadDePartida);
-        for (Viaje v:viajesCompatibles) System.out.println(v.toString());
-        System.out.println("-------------------------------------");
+        buscador.printViajesCompatibles(viajesCompatibles);
         System.out.print("Ingrese la ciudad de destino: ");
         String ciudadDeDestino = std.nextLine();
         viajesCompatibles = buscador.buscarViajesPorCiudadDeDestino(viajesCompatibles, ciudadDeDestino);
-        for (Viaje v:viajesCompatibles) System.out.println(v.toString());
-        System.out.println("-------------------------------------");
+        buscador.printViajesCompatibles(viajesCompatibles);
         System.out.print("Ingrese la categoria deseada: ");
         String categoria = std.nextLine();
         viajesCompatibles = buscador.buscarViajesPorCategoria(viajesCompatibles, categoria);
-        for (Viaje v:viajesCompatibles) System.out.println(v.toString());
-        System.out.println("-------------------------------------");
+        buscador.printViajesCompatibles(viajesCompatibles);
         String franjaHoraria = "";
         while (!franjaHoraria.toLowerCase().equals("maniana") && !franjaHoraria.toLowerCase().equals("tarde")
         && !franjaHoraria.toLowerCase().equals("noche")){
@@ -97,13 +88,11 @@ public class Main {
             franjaHoraria = std.nextLine();
         }
         viajesCompatibles = buscador.buscarViajesPorFranjaHoraria(viajesCompatibles, franjaHoraria);
-        for (Viaje v:viajesCompatibles) System.out.println(v.toString());
-        System.out.println("-------------------------------------");
+        buscador.printViajesCompatibles(viajesCompatibles);
         System.out.print("Ingrese la cantidad de pasajes: ");
         int cantidadDePasajes = new Validator().validacionInt();
         viajesCompatibles = buscador.buscarViajesPorCantidadDePasajes(viajesCompatibles, cantidadDePasajes);
-        for (Viaje v:viajesCompatibles) System.out.println(v.toString());
-        System.out.println("-------------------------------------");
+        buscador.printViajesCompatibles(viajesCompatibles);
         
         
     }
