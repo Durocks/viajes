@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import ClasesEInterfaces.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  *
@@ -24,6 +28,7 @@ public class Main {
     private static final List<EmpresaDeViajes> empresasDeViajes = new ArrayList();
     private static final List<Asiento> asientos = new ArrayList();
     private static final List<Venta> ventas = new ArrayList();
+    private static final List<Vendedor> vendedores = new ArrayList();
 
     public static void main(String[] args) {
         initValues();
@@ -33,6 +38,11 @@ public class Main {
             System.out.println("Ingrese la opcion:\n"
                     + "1 - Agregar los detalles de una venta\n"
                     + "2 - Devolver o modificar un pasaje\n"
+                    + "3 - Generar archivo de empresas\n"
+                    + "4 - Generar informe del año\n"
+                    + "5 - Ventas segun vendedor, que superan el argumento\n"
+                    + "6 - Cambiar de vendedor activo\n"
+                    + "7 - Generar informe de puntos\n"
                     + "0 - Terminar");
             opcion = validator.validacionInt();
             switch (opcion){
@@ -41,16 +51,33 @@ public class Main {
                     break;
                 case 2:
                     modificarPasaje();
+                    break;
+                case 3:
+                    generarArchivoEmpresas();
+                    break;
+                case 4:
+                    generarInformeAnio();
+                    break;
+                case 5:
+                    ventasArgumento(args);
+                    break;
+                case 6:
+                    elegirVendedor();
+                    break;
+                case 7:
+                    generarInformePuntos();
+                    break;
                 case 0:
                     break;
                 default:
                     break;
             }
         }
+        std.close();
     }
 
     private static void initValues() {
-        registrarVendedor();
+        elegirVendedor();
         
         empresasDeViajes.add(new EmpresaDeViajes(0, "FlechaBus", 381461327));
         empresasDeViajes.add(new EmpresaDeViajes(1, "Niandu del Sur", 2147389247));
@@ -63,7 +90,7 @@ public class Main {
     }
 
     private static void agregarVenta() {
-        ventas.add(new Venta(maxIdMasUno((List<Object>)(Object)ventas), vendedor.getNombre(), vendedor.getApellido(), 0, 0));
+        ventas.add(new Venta(maxIdMasUno((List<Object>)(Object)ventas), vendedor.getNombre(), vendedor.getApellido()));
         System.out.println("-------------------------------------------------------");
         List <Viaje> viajesCompatibles = viajes;
         List<Viaje> backUpViajesCompatibles = new ArrayList();
@@ -163,12 +190,15 @@ public class Main {
                     pasajes.add(new PasajeAereo(maxIdMasUno((List<Object>)(Object)pasajes), seleccionarAsiento(viajesCompatibles.get(0)), seleccionarPasajero(), viajesCompatibles.get(0), seleccionarTratamientoEspecial()));
                 if (viajesCompatibles.get(0) instanceof ViajeTerrestre)
                     pasajes.add(new PasajeTerrestre(maxIdMasUno((List<Object>)(Object)pasajes), seleccionarAsiento(viajesCompatibles.get(0)), seleccionarPasajero(), viajesCompatibles.get(0), seleccionarTratamientoEspecial()));
+                pasajes.get(pasajes.size()-1).getAsiento().setPasaje(pasajes.get(pasajes.size()-1));
                 System.out.println("\nPasaje confirmado: ");
                 buscador.printShortViajesCompatibles(viajesCompatibles);
                 ventas.get(ventas.size()-1).getPasajes().add(pasajes.get(pasajes.size()-1));
                 ventas.get(ventas.size()-1).setPrecioTotal(ventas.get(ventas.size()-1).getPrecioTotal() +
                         pasajes.get(pasajes.size()-1).getViaje().getPrecioPasaje());
                 ventas.get(ventas.size()-1).setTotalPendiente(ventas.get(ventas.size()-1).getPrecioTotal());
+                viajes.get(viajes.indexOf(viajesCompatibles.get(0))).getPasajeros().add(pasajes.get(pasajes.size()-1).getPasajero());
+                pasajes.get(pasajes.size()-1).getPasajero().getPasajes().add(pasajes.get(pasajes.size()-1));
                 }
                 pagarPasaje(pasajes.get(pasajes.size()-1), cantidadDePasajes);
                 for (int i = cantidadDePasajes; i > 0; i--){
@@ -181,6 +211,7 @@ public class Main {
                 ventas.remove(ventas.get(ventas.size()-1));
             }
         }
+        actualizarArchivos();
     }
     
     private static Pasajero seleccionarPasajero(){
@@ -264,6 +295,7 @@ public class Main {
     private static void pagarPasaje(Pasaje pasaje, int cantidad) {
         double totalAPagar = pasaje.getViaje().getPrecioPasaje() * cantidad;
         String medioDePago = validator.validarMedioDePago();
+        ventas.get(ventas.size()-1).setFormaDePago(medioDePago.substring(0,1) + medioDePago.substring(1, medioDePago.length()));
         System.out.print("Desea usar puntos? (Si/No): ");
         boolean usarPuntos = validator.validacionSiNo();
         if (medioDePago.toLowerCase().matches("tarjeta"))
@@ -293,6 +325,10 @@ public class Main {
                 df.format(totalAPagar) + " $.");
             System.out.println("Restan " + pasaje.getPasajero().getPuntos() + " puntos en la cuenta.");
         }
+        else{
+            System.out.println("Se han usado 0 puntos, y resta pagar " +
+            df.format(totalAPagar) + " $.");
+        }
         System.out.println("Presione ENTER cuando el cliente haya hecho el pago...");
         std.nextLine();
         ventas.get(ventas.size()-1).setTotalPendiente(0);
@@ -302,6 +338,7 @@ public class Main {
                 puntos++;
         System.out.println("Se han pagado " + df.format(totalAPagar)+ " $, y se le han sumado "
                 + puntos + " puntos.");
+        ventas.get(ventas.size()-1).setPuntosCorrespondientes(puntos);
         System.out.println("-------------------------------------------------------");
     }
 
@@ -432,19 +469,173 @@ public class Main {
                     System.out.println("Ninguno de los viajes disponibles coincide con sus parametros.");
             }
         }
+        actualizarArchivos();
     }
     
     private static void actualizarArchivos(){
+        if (!new File("res").exists())
+            new File("res").mkdirs();
         File ventasFile = new File("res/Ventas.txt");
         File pasajesVendidosFile = new File("res/Pasajes Vendidos.txt");
         File AsientosAsignadosFile = new File("res/Asientos Asignados.txt");
+        try {
+            if (!ventasFile.exists())
+                ventasFile.createNewFile();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(ventasFile, false));
+            for (Venta v:ventas){
+                // No se que es ancho fijo, asi que lo dejo en tab.
+                writer.write(validator.inicioHora(v.getFecha()) + v.toString() + "\n");
+            }
+            writer.flush();
+            writer = new BufferedWriter(new FileWriter(pasajesVendidosFile, false));
+            for (Pasaje p:pasajes){
+                writer.write(p.toStringCompletoPuntoYComa()+ "\n");
+            }
+            writer.flush();
+            writer = new BufferedWriter(new FileWriter(AsientosAsignadosFile, false));
+            for (Pasaje p:pasajes){
+                writer.write(p.getAsiento().toStringVendedor());
+            }
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 
-    private static void registrarVendedor() {
-        System.out.print("Ingrese el nombre del vendedor: ");
-        String nombre = std.nextLine();
-        System.out.print("Ingrese el apellido: ");
-        String apellido = std.nextLine();
-        vendedor = new Vendedor(0, nombre, apellido);
+    private static void elegirVendedor() {
+        String nombreYApellido = "";
+        while (!nombreYApellido.contains(" ")){
+            System.out.print("Ingrese el nombre y apellido del vendedor: ");
+            nombreYApellido = std.nextLine();
+        }
+        String[] palabras = nombreYApellido.split(" ");
+        for (Vendedor v:vendedores)
+            if (v.getNombre().toLowerCase().equals(palabras[0].toLowerCase()) &&
+                    v.getApellido().toLowerCase().equals(palabras[1].toLowerCase())){
+                vendedor = v;
+                return;
+            }
+        vendedor = new Vendedor(maxIdMasUno((List<Object>)(Object)vendedores),
+                (palabras[0].substring(0,1).toUpperCase()+palabras[0].substring(1, palabras[0].length()).toLowerCase()),
+                (palabras[1].substring(0,1).toUpperCase()+palabras[1].substring(1, palabras[1].length()).toLowerCase()));
+        vendedores.add(vendedor);
+    }
+
+    private static void generarArchivoEmpresas() {
+        File empresasFolder = new File("res/Empresas");
+        if (!empresasFolder.exists())
+            empresasFolder.mkdirs();
+        for (EmpresaDeViajes edv:empresasDeViajes){
+            String nombreEmpresa;
+            if (edv.getNombre().length() >= 4)
+                nombreEmpresa = edv.getNombre().substring(0, 4) + "-" +
+                    validator.imprimirFecha2(GregorianCalendar.getInstance()) + ".txt";
+            else
+                nombreEmpresa = edv.getNombre();
+            File empresasFile = new File("res/Empresas/" + nombreEmpresa);
+            try {
+                if (!empresasFile.exists())
+                empresasFile.createNewFile();
+                BufferedWriter writer = new BufferedWriter(new FileWriter(empresasFile));
+                writer.write("Empresa " + (edv.getId()+1) + ": " + edv.getNombre() + "\n");
+                writer.flush();
+                writer = new BufferedWriter(new FileWriter(empresasFile, true));
+                for (Viaje v:edv.getViajes()){
+                    for (Pasajero p1:v.getPasajeros()){
+                        for (Pasaje p2:p1.getPasajes()){
+                            writer.write("P\t" + "Fecha: " + p2.getId() + "\t" +
+                                    validator.imprimirFecha3(p2.getViaje().getFecha()) +
+                                    "\tOrigen: " + p2.getViaje().getCiudadDePartida() +
+                                    "\tDestino: " + p2.getViaje().getDestino() +
+                                    "\tCategoria: " + p2.getViaje().getCategoria() +
+                                    "Lugares disponibles: " + validator.disponibleSiNo(p2.getViaje().lugaresDisponibles()) + "\n");
+                            writer.write("A" + "\tPasaje: " + p2.getId() +
+                                    "\tAsientos Disponibles: " + p2.getViaje().lugaresDisponibles() + "\n\n");
+                        }
+                    }
+                }
+                writer.close();
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+        
+    }
+
+    private static void generarInformeAnio() {
+        System.out.print("Ingrese el mes que desea conocer: ");
+        int mes = validator.validacionInt()-1;
+        for (Venta v:ventas){
+            if (v.getFecha().get(Calendar.MONTH) == mes &&
+                    v.getFecha().get(Calendar.YEAR) == GregorianCalendar.getInstance().get(Calendar.YEAR)){
+                String informe = v.toString();
+                for (Pasaje p:v.getPasajes()){
+                    informe +=  "\n\t- " + p.getPasajero().toString() +
+                            "\n\t\t- " + p.getAsiento().toString() + 
+                            "\n\t- " + "Forma de pago: " + v.getFormaDePago() +
+                            "\n\t- " + "Puntos correspondientes: " + v.getPuntosCorrespondientes() + "\n";
+                }
+                System.out.println("-------------------------------------------------------");
+                System.out.println(informe);
+                try {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter("res/Informe.txt"));
+                    writer.write(informe);
+                    writer.flush();
+                    writer.close();
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+                
+            }
+        }
+    }
+
+    private static void ventasArgumento(String[] args) {
+        try {
+            double importe = Double.parseDouble(args[0]);
+            for (Vendedor v1:vendedores){
+                System.out.println(v1.toString() +
+                        "\n\t- Cantidad de ventas que superan al argumento: " +
+                        validator.ventasQueSuperanImporte(importe, v1.getVentas()) +
+                        "\n");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+        }
+    }
+
+    private static void generarInformePuntos() {
+        if (!pasajeros.isEmpty()){
+            File informeFolder = new File("res/Informe de puntos/");
+            if (!informeFolder.exists())
+                informeFolder.mkdirs();
+        }
+        else{
+            System.out.println("Aun no hay pasajeros registrados.");
+            return;
+        }
+        for (Pasajero p:pasajeros){
+            if (p.getPuntos() > 0){
+                File informeFile = new File ("res/Informe de puntos/" + p.getNombre() + p.getApellido());
+                try {
+                    if (!informeFile.exists())
+                        informeFile.createNewFile();
+                    else
+                        new FileWriter(informeFile, false).write("");
+                    FileWriter writer = new FileWriter(informeFile, true);
+                    writer.write(p.toString() + "\n" + 
+                            "\t- Cantidad de puntos: " + p.getPuntos());
+                    writer.write("\nViajes para los que alcanza la cantidad de puntos: \n");
+                    writer.flush();
+                    for (Viaje v:viajes)
+                        if (v.getPrecioPasaje() < (p.getPuntos()*50))
+                            writer.write(v.toString() + "\n");
+                    writer.flush();
+                } catch (IOException iOException) {
+                    System.out.println(iOException);
+                }
+            }
+        }
     }
 }
