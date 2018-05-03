@@ -1,0 +1,17 @@
+Sumatorias de Precios. Cada linea muestra cuanto se agrega al precio final segun parametros.
+
+Pasaje terrestre;"300"
+Cama;"600"
+Semicama;"400"
+
+Pasaje Aereo;"500"
+First Class;"4000"
+Economy;"500"
+
+Destinos
+New York;"1500"
+Rio De Janeiro;"500"
+Mar Del Plata;"100"
+Rosario;"50"
+Hong King;"1000"
+Bariloche;"500"

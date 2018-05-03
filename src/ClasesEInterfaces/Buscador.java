@@ -1,6 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change v license header, choose License Headers in Project Properties.
+ * To change v template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package ClasesEInterfaces;
@@ -42,7 +42,7 @@ public class Buscador {
     public List<Viaje> buscarViajesPorCiudadDePartida (List<Viaje> viajes, String ciudadDePartida){
         List<Viaje> viajesPorCiudadDePartidaEncontrados = new ArrayList();
         for (Viaje v:viajes)
-            if (v.getCiudadDePartida().equals(ciudadDePartida))
+            if (v.getCiudadDePartida().toLowerCase().equals(ciudadDePartida.toLowerCase()))
                 viajesPorCiudadDePartidaEncontrados.add(v);
         return viajesPorCiudadDePartidaEncontrados;
     }
@@ -50,7 +50,7 @@ public class Buscador {
     public List<Viaje> buscarViajesPorCiudadDeDestino (List<Viaje> viajes, String ciudadDeDestino){
         List<Viaje> viajesPorCiudadDeDestinoEncontrados = new ArrayList();
         for (Viaje v:viajes)
-            if (v.getDestino().equals(ciudadDeDestino))
+            if (v.getDestino().toLowerCase().equals(ciudadDeDestino.toLowerCase()))
                 viajesPorCiudadDeDestinoEncontrados.add(v);
         return viajesPorCiudadDeDestinoEncontrados;
     }
@@ -58,7 +58,7 @@ public class Buscador {
     public List<Viaje> buscarViajesPorCategoria (List<Viaje> viajes, String categoria){
         List<Viaje> viajesPorCategoria = new ArrayList();
         for (Viaje v:viajes)
-            if (v.getCategoria().equals(categoria))
+            if (v.getCategoria().toLowerCase().equals(categoria.toLowerCase()))
                 viajesPorCategoria.add(v);
         return viajesPorCategoria;
     }
@@ -66,7 +66,7 @@ public class Buscador {
     public List<Viaje> buscarViajesPorFranjaHoraria (List<Viaje> viajes, String franjaHoraria){
         List<Viaje> viajesPorFranjaHoraria = new ArrayList();
         for (Viaje v:viajes)
-            if (v.getFranjaHoraria().equals(franjaHoraria))
+            if (v.getFranjaHoraria().toLowerCase().equals(franjaHoraria.toLowerCase()))
                 viajesPorFranjaHoraria.add(v);
         return viajesPorFranjaHoraria;
     }
@@ -77,5 +77,47 @@ public class Buscador {
             if (v.lugaresDisponibles() >= cantidadDeseada)
                 viajesSegunCantidadDePasajes.add(v);
         return viajesSegunCantidadDePasajes;
+    }
+    
+    public List<Viaje> buscarViajesPorEmpresaDelViaje (List<Viaje> viajes, EmpresaDeViajes empresaDeViajes){
+        List<Viaje> viajesSegunEmpresaDelViaje = new ArrayList();
+        for (Viaje v:viajes)
+            if (v.getEmpresaDelViaje() == empresaDeViajes)
+                viajesSegunEmpresaDelViaje.add(v);
+        return viajesSegunEmpresaDelViaje;
+    }
+    
+    public void printViajesCompatibles(List<Viaje> viajes){
+        for (Viaje v:viajes)
+            System.out.println(v.toString());
+            System.out.println("-------------------------------------");
+    }
+
+    public void printShortViajesCompatibles(List<Viaje> viajes) {
+        for (Viaje v:viajes)
+            if (v.lugaresDisponibles() > 0){
+                System.out.println("Viaje\t" + v.id + "\tTrajecto: " + v.getTrajecto() +
+                        "\tPrecio del pasaje: " + v.getPrecioPasaje() + " $" +
+                                "\tEmpresa del viaje: " + v.empresaDelViaje.getNombre());
+            }
+            else
+                System.out.println("El viaje consultado no posee lugares disponibles.");
+            System.out.println("-------------------------------------");
+    }
+
+    public List<Viaje> buscarPorAsiento(List<Viaje> viajes, int idAsiento) {
+        List<Viaje> viajesSegunAsiento = new ArrayList();
+        for (Viaje v:viajes)
+            if (v.getAsientos().get(idAsiento).isOcupado() == false)
+                viajesSegunAsiento.add(v);
+        return viajesSegunAsiento;
+    }
+
+    public List<Viaje> buscarPorId(List<Viaje> viajes, int id) {
+        List<Viaje> viajesSegunId = new ArrayList();
+        for (Viaje v:viajes)
+            if (v.getId() == id)
+                viajesSegunId.add(v);
+        return viajesSegunId;
     }
 }

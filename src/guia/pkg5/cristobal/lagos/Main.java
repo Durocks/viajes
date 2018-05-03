@@ -77,7 +77,7 @@ public class Main {
     }
 
     private static void initValues() {
-        elegirVendedor();
+        elegirVendedor();       
         
         empresasDeViajes.add(new EmpresaDeViajes(0, "FlechaBus", 381461327));
         empresasDeViajes.add(new EmpresaDeViajes(1, "Niandu del Sur", 2147389247));
@@ -87,6 +87,7 @@ public class Main {
 
         new AgregadorDeObjetos().agregadorDeViajes(viajes, empresasDeViajes);
         new AgregadorDeObjetos().agregadorDePasajeros(pasajeros);
+        actualizarArchivos();
     }
 
     private static void agregarVenta() {
@@ -478,6 +479,7 @@ public class Main {
         File ventasFile = new File("res/Ventas.txt");
         File pasajesVendidosFile = new File("res/Pasajes Vendidos.txt");
         File AsientosAsignadosFile = new File("res/Asientos Asignados.txt");
+        File pasajerosFile = new File("res/Pasajeros.txt");
         try {
             if (!ventasFile.exists())
                 ventasFile.createNewFile();
@@ -495,6 +497,12 @@ public class Main {
             writer = new BufferedWriter(new FileWriter(AsientosAsignadosFile, false));
             for (Pasaje p:pasajes){
                 writer.write(p.getAsiento().toStringVendedor());
+            }
+            writer.flush();
+            new FileWriter(pasajerosFile, false).write("");
+            writer = new BufferedWriter(new FileWriter(pasajerosFile, true));
+            for (Pasajero p:pasajeros){
+                writer.write(p.toWrite() + "\n");
             }
             writer.flush();
             writer.close();
@@ -606,6 +614,7 @@ public class Main {
     }
 
     private static void generarInformePuntos() {
+        System.out.println("---------------------------------------------------------");
         if (!pasajeros.isEmpty()){
             File informeFolder = new File("res/Informe de puntos/");
             if (!informeFolder.exists())
@@ -637,5 +646,6 @@ public class Main {
                 }
             }
         }
+        System.out.println("El informe ha sido generado.");
     }
 }

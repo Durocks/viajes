@@ -1,0 +1,5 @@
+Venta 0		Vendedor: Cristobal Lagos	Fecha: 5/3/2018		PrecioTotal: 750.0 $	Total Pendiente: 0.0 $
+	- Pasajero: Jimena Gonzales		Fecha de Nacimiento: 9/28/1992		Edad: 25	Sexo: Masculino
+		- Asiento 0	Descripcion:	1A	Ocupado: Si	Viaje:	Buenos Aires a Rosario		Pasaje:	0
+		- Forma de pago: tarjeta
+		- Puntos correspondientes: 2
