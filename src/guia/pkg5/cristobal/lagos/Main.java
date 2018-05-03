@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import ClasesEInterfaces.*;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 
@@ -13,6 +14,7 @@ import java.util.Calendar;
  */
 public class Main {
 
+    private static Vendedor vendedor = new Vendedor();
     private static final Buscador buscador = new Buscador();
     private static final Validator validator = new Validator();
     private static final Scanner std = new Scanner(System.in);
@@ -21,6 +23,7 @@ public class Main {
     private static final List<Pasajero> pasajeros = new ArrayList();
     private static final List<EmpresaDeViajes> empresasDeViajes = new ArrayList();
     private static final List<Asiento> asientos = new ArrayList();
+    private static final List<Venta> ventas = new ArrayList();
 
     public static void main(String[] args) {
         initValues();
@@ -47,6 +50,8 @@ public class Main {
     }
 
     private static void initValues() {
+        registrarVendedor();
+        
         empresasDeViajes.add(new EmpresaDeViajes(0, "FlechaBus", 381461327));
         empresasDeViajes.add(new EmpresaDeViajes(1, "Niandu del Sur", 2147389247));
         empresasDeViajes.add(new EmpresaDeViajes(2, "American Airlines", 738921393));
@@ -58,6 +63,7 @@ public class Main {
     }
 
     private static void agregarVenta() {
+        ventas.add(new Venta(maxIdMasUno((List<Object>)(Object)ventas), vendedor.getNombre(), vendedor.getApellido(), 0, 0));
         System.out.println("-------------------------------------------------------");
         List <Viaje> viajesCompatibles = viajes;
         List<Viaje> backUpViajesCompatibles = new ArrayList();
@@ -159,14 +165,21 @@ public class Main {
                     pasajes.add(new PasajeTerrestre(maxIdMasUno((List<Object>)(Object)pasajes), seleccionarAsiento(viajesCompatibles.get(0)), seleccionarPasajero(), viajesCompatibles.get(0), seleccionarTratamientoEspecial()));
                 System.out.println("\nPasaje confirmado: ");
                 buscador.printShortViajesCompatibles(viajesCompatibles);
+                ventas.get(ventas.size()-1).getPasajes().add(pasajes.get(pasajes.size()-1));
+                ventas.get(ventas.size()-1).setPrecioTotal(ventas.get(ventas.size()-1).getPrecioTotal() +
+                        pasajes.get(pasajes.size()-1).getViaje().getPrecioPasaje());
+                ventas.get(ventas.size()-1).setTotalPendiente(ventas.get(ventas.size()-1).getPrecioTotal());
                 }
                 pagarPasaje(pasajes.get(pasajes.size()-1), cantidadDePasajes);
                 for (int i = cantidadDePasajes; i > 0; i--){
                     System.out.println(pasajes.get(pasajes.size()-i).toStringCompleto());
                 }
+                vendedor.getVentas().add(ventas.get(ventas.size()-1));
             }
-            else
+            else{
                 System.out.println("La reserva del pasaje ha sido cancelada.");
+                ventas.remove(ventas.get(ventas.size()-1));
+            }
         }
     }
     
@@ -282,6 +295,7 @@ public class Main {
         }
         System.out.println("Presione ENTER cuando el cliente haya hecho el pago...");
         std.nextLine();
+        ventas.get(ventas.size()-1).setTotalPendiente(0);
         int puntos = 0;
         for (int i = (int)totalAPagar; i > 0; i = i-150)
             if ((i-150) > 0)
@@ -418,5 +432,19 @@ public class Main {
                     System.out.println("Ninguno de los viajes disponibles coincide con sus parametros.");
             }
         }
+    }
+    
+    private static void actualizarArchivos(){
+        File ventasFile = new File("res/Ventas.txt");
+        File pasajesVendidosFile = new File("res/Pasajes Vendidos.txt");
+        File AsientosAsignadosFile = new File("res/Asientos Asignados.txt");
+    }
+
+    private static void registrarVendedor() {
+        System.out.print("Ingrese el nombre del vendedor: ");
+        String nombre = std.nextLine();
+        System.out.print("Ingrese el apellido: ");
+        String apellido = std.nextLine();
+        vendedor = new Vendedor(0, nombre, apellido);
     }
 }
