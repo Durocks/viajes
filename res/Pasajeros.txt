@@ -1,0 +1,6 @@
+Pasajero 0: Julian Lopez|Fecha de Nacimiento: 1/15/1990|Edad: 28|Sexo: Masculino
+Pasajero 1: Jorge Perez|Fecha de Nacimiento: 5/10/1985|Edad: 32|Sexo: Masculino
+Pasajero 2: Marcos Atros|Fecha de Nacimiento: 10/25/1970|Edad: 47|Sexo: Masculino
+Pasajero 3: Roberto Velardez|Fecha de Nacimiento: 3/12/1950|Edad: 68|Sexo: Masculino
+Pasajero 4: Maria Pastor|Fecha de Nacimiento: 2/23/1988|Edad: 30|Sexo: Femenino
+Pasajero 5: Jimena Gonzales|Fecha de Nacimiento: 9/28/1992|Edad: 25|Sexo: Masculino
