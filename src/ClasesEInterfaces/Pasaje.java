@@ -1,6 +1,6 @@
 package ClasesEInterfaces;
 
-public abstract class Pasaje implements Calculos, getId{
+public abstract class Pasaje implements getId{
     protected int id;
     protected Asiento asiento;
     protected Pasajero pasajero;

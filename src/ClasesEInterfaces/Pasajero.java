@@ -17,14 +17,13 @@ public class Pasajero {
     private int puntos;
     private String sexo;
     private List<Pasaje> pasajes;
-    private boolean frecuente;
     
     public Pasajero(){
         this.pasajes = new ArrayList();
     }
 
     public Pasajero(int id, int documento, Calendar nacimiento, String nombre,
-            String apellido, int puntos, String sexo, List<Pasaje> pasajes, boolean frecuente) {
+            String apellido, int puntos, String sexo, List<Pasaje> pasajes) {
         this.pasajes = pasajes;
         this.id = id;
         this.documento = documento;
@@ -33,7 +32,6 @@ public class Pasajero {
         this.apellido = apellido;
         this.puntos = puntos;
         this.sexo = sexo;
-        this.frecuente = frecuente;
     }
     
     public int getEdad(){
@@ -58,14 +56,6 @@ public class Pasajero {
     public String toWrite() {
         return "Pasajero " + id + ": " + this.nombre + " " + this.apellido + "|Fecha de Nacimiento: " +
                 new Validator().imprimirFecha(this.nacimiento) + "|Edad: " + this.getEdad() + "|Sexo: " + this.sexo;
-    }
-
-    public void setFrecuente(boolean frecuente) {
-        this.frecuente = frecuente;
-    }
-
-    public boolean isFrecuente() {
-        return frecuente;
     }
 
     public int getId() {

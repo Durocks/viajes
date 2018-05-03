@@ -43,17 +43,17 @@ public class AgregadorDeObjetos {
     
     public void agregadorDePasajeros(List<Pasajero> pasajeros){
         pasajeros.add(new Pasajero(0, 35321542, new Validator().nuevaFecha("01/15/1990"),
-                "Julian", "Lopez", 50, "Masculino", new ArrayList(), true));
+                "Julian", "Lopez", 50, "Masculino", new ArrayList()));
         pasajeros.add(new Pasajero(1, 3759374, new Validator().nuevaFecha("05/10/1985"),
-                "Jorge", "Perez", 100, "Masculino", new ArrayList(), true));
+                "Jorge", "Perez", 100, "Masculino", new ArrayList()));
         pasajeros.add(new Pasajero(2, 2838475, new Validator().nuevaFecha("10/25/1970"),
-                "Marcos", "Atros", 20, "Masculino", new ArrayList(), true));
+                "Marcos", "Atros", 20, "Masculino", new ArrayList()));
         pasajeros.add(new Pasajero(3, 1029384, new Validator().nuevaFecha("03/12/1950"),
-                "Roberto", "Velardez", 75, "Masculino", new ArrayList(), true));
+                "Roberto", "Velardez", 75, "Masculino", new ArrayList()));
         pasajeros.add(new Pasajero(4, 34938494, new Validator().nuevaFecha("02/23/1988"),
-                "Maria", "Pastor", 80, "Femenino", new ArrayList(), true));
+                "Maria", "Pastor", 80, "Femenino", new ArrayList()));
         pasajeros.add(new Pasajero(5, 36828394, new Validator().nuevaFecha("09/28/1992"),
-                "Jimena", "Gonzales", 200, "Masculino", new ArrayList(), true));
+                "Jimena", "Gonzales", 200, "Masculino", new ArrayList()));
     }
 
     

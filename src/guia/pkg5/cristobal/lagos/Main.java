@@ -91,7 +91,7 @@ public class Main {
     }
 
     private static void agregarVenta() {
-        ventas.add(new Venta(maxIdMasUno((List<Object>)(Object)ventas), vendedor.getNombre(), vendedor.getApellido()));
+        ventas.add(new Venta(maxIdMasUno((List<Object>)(Object)ventas), vendedor));
         System.out.println("-------------------------------------------------------");
         List <Viaje> viajesCompatibles = viajes;
         List<Viaje> backUpViajesCompatibles = new ArrayList();
@@ -243,7 +243,7 @@ public class Main {
             String sexo = std.nextLine();
             System.out.println("Ingrese la fecha de nacimiento: ");
             Calendar fechaNacimiento = validator.validacionFecha();
-            pasajeroBuscado = new Pasajero(maxIdMasUno((List<Object>)(Object)pasajeros), dni, fechaNacimiento, nombre, apellido, 0, sexo, pasajes, false);            
+            pasajeroBuscado = new Pasajero(maxIdMasUno((List<Object>)(Object)pasajeros), dni, fechaNacimiento, nombre, apellido, 0, sexo, pasajes);            
             System.out.println(pasajeroBuscado.toString());
         }
         return pasajeroBuscado;

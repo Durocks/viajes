@@ -11,8 +11,7 @@ import java.util.List;
  */
 public class Venta {
     private int id;
-    private String nombreVendedor;
-    private String apellidoVendedor;
+    private Vendedor vendedor;        
     private List<Pasaje> pasajes;
     private Calendar fecha = GregorianCalendar.getInstance();
     private double precioTotal;
@@ -24,35 +23,32 @@ public class Venta {
         this.pasajes = new ArrayList();
     }
 
-    public Venta(int id, String nombreVendedor, String apellidoVendedor, List<Pasaje> pasajes,
+    public Venta(int id, Vendedor vendedor, List<Pasaje> pasajes,
             double precioTotal, double totalPendiente, String formaDePago, int puntosCorrespondientes) {
         this.pasajes = pasajes;
         this.id = id;
-        this.nombreVendedor = nombreVendedor;
-        this.apellidoVendedor = apellidoVendedor;
+        this.vendedor = vendedor;
         this.precioTotal = precioTotal;
         this.totalPendiente = totalPendiente;
         this.formaDePago = formaDePago;
         this.puntosCorrespondientes = puntosCorrespondientes;
     }
     
-    public Venta(int id, String nombreVendedor, String apellidoVendedor,
+    public Venta(int id, Vendedor vendedor,
             double precioTotal, double totalPendiente, String formaDePago, int puntosCorrespondientes) {
         this.pasajes = new ArrayList();
         this.id = id;
-        this.nombreVendedor = nombreVendedor;
-        this.apellidoVendedor = apellidoVendedor;
+        this.vendedor = vendedor;
         this.precioTotal = precioTotal;
         this.totalPendiente = totalPendiente;
         this.formaDePago = formaDePago;
         this.puntosCorrespondientes = puntosCorrespondientes;
     }
     
-    public Venta(int id, String nombreVendedor, String apellidoVendedor) {
+    public Venta(int id, Vendedor vendedor) {
         this.pasajes = new ArrayList();
         this.id = id;
-        this.nombreVendedor = nombreVendedor;
-        this.apellidoVendedor = apellidoVendedor;
+        this.vendedor = vendedor;
     }
     
     public void setFormaDePago(String formaDePago) {
@@ -79,8 +75,8 @@ public class Venta {
         this.totalPendiente = totalPendiente;
     }
 
-    public String getApellidoVendedor() {
-        return apellidoVendedor;
+    public Vendedor getVendedor() {
+        return vendedor;
     }
 
     public List<Pasaje> getPasajes() {
@@ -95,20 +91,12 @@ public class Venta {
         return id;
     }
 
-    public String getNombreVendedor() {
-        return nombreVendedor;
-    }
-
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setNombreVendedor(String nombreVendedor) {
-        this.nombreVendedor = nombreVendedor;
-    }
-
-    public void setApellidoVendedor(String apellidoVendedor) {
-        this.apellidoVendedor = apellidoVendedor;
+    public void setVendedor(Vendedor vendedor) {
+        this.vendedor = vendedor;
     }
 
     public void setPasajes(List<Pasaje> pasajes) {
@@ -122,8 +110,8 @@ public class Venta {
     @Override
     public String toString() {
         String toString = "Venta " + id + "\t\tVendedor: " +
-                new Validator().align((nombreVendedor + " " +
-                        apellidoVendedor), 2) + "Fecha: " + new Validator().imprimirFecha(fecha) +
+                new Validator().align((vendedor.getNombre() + " " +
+                        vendedor.getApellido()), 2) + "Fecha: " + new Validator().imprimirFecha(fecha) +
                 "\t\tPrecioTotal: " + precioTotal + " $" + "\tTotal Pendiente: " + totalPendiente + " $";
         return toString;
     }
