@@ -57,6 +57,24 @@ public class Asiento implements getId{
     public void setOcupado(boolean ocupado) {
         this.ocupado = ocupado;
     }
+
+    @Override
+    public String toString() {
+        return "Asiento " + id + "\tDescripcion:\t" + descripcion + "\tOcupado: " +
+                new Validator().printSiNo(ocupado) + "\tViaje:\t" + viaje.getTrajecto() +
+                "\t\tPasaje:\t" + this.pasajeToString();
+    }
     
-    
+    public String toStringVendedor(){
+        return "Asiento " + id + "\tDescripcion:\t" + descripcion + "\tPasajero: " +
+                pasaje.getPasajero().getNombre() + " " + pasaje.getPasajero().getApellido() +
+                "\tViaje:\t" + viaje.getTrajecto(); 
+    }
+
+    private String pasajeToString() {
+        if (this.pasaje == null)
+            return "Ninguno";
+        else
+            return this.pasaje.id + "";
+    }
 }

@@ -11,29 +11,61 @@ import java.util.List;
 public class Pasajero {
     private int id;
     private int documento;
-    private int edad;
     private Calendar nacimiento;
     private String nombre;
     private String apellido;
     private int puntos;
     private String sexo;
     private List<Pasaje> pasajes;
+    private boolean frecuente;
     
     public Pasajero(){
         this.pasajes = new ArrayList();
     }
 
-    public Pasajero(int id, int documento, int edad, Calendar nacimiento, String nombre,
-            String apellido, int puntos, String sexo, List<Pasaje> pasajes) {
+    public Pasajero(int id, int documento, Calendar nacimiento, String nombre,
+            String apellido, int puntos, String sexo, List<Pasaje> pasajes, boolean frecuente) {
         this.pasajes = pasajes;
         this.id = id;
         this.documento = documento;
-        this.edad = edad;
         this.nacimiento = nacimiento;
         this.nombre = nombre;
         this.apellido = apellido;
         this.puntos = puntos;
         this.sexo = sexo;
+        this.frecuente = frecuente;
+    }
+    
+    public int getEdad(){
+        Calendar fecha = Calendar.getInstance();
+
+        int anios = fecha.get(Calendar.YEAR) -  this.nacimiento.get(Calendar.YEAR);
+        int meses = fecha.get(Calendar.MONTH) - this.nacimiento.get(Calendar.MONTH);
+        int dias = fecha.get(Calendar.DAY_OF_MONTH) - this.nacimiento.get(Calendar.DAY_OF_MONTH);
+
+        if (meses < 0 || (meses == 0 && dias < 0)) {
+            anios = anios - 1;
+        }
+        return anios;
+    }
+
+    @Override
+    public String toString() {
+        return "Pasajero: " + this.nombre + " " + this.apellido + "\t\tFecha de Nacimiento: " +
+                new Validator().imprimirFecha(this.nacimiento) + "\t\tEdad: " + this.getEdad() + "\tSexo: " + this.sexo;
+    }
+    
+    public String toWrite() {
+        return "Pasajero " + id + ": " + this.nombre + " " + this.apellido + "|Fecha de Nacimiento: " +
+                new Validator().imprimirFecha(this.nacimiento) + "|Edad: " + this.getEdad() + "|Sexo: " + this.sexo;
+    }
+
+    public void setFrecuente(boolean frecuente) {
+        this.frecuente = frecuente;
+    }
+
+    public boolean isFrecuente() {
+        return frecuente;
     }
 
     public int getId() {
@@ -42,10 +74,6 @@ public class Pasajero {
 
     public int getDocumento() {
         return documento;
-    }
-
-    public int getEdad() {
-        return edad;
     }
 
     public Calendar getNacimiento() {
@@ -80,10 +108,6 @@ public class Pasajero {
         this.documento = documento;
     }
 
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
-
     public void setNacimiento(Calendar nacimiento) {
         this.nacimiento = nacimiento;
     }
@@ -106,6 +130,13 @@ public class Pasajero {
 
     public void setPasajes(List<Pasaje> pasajes) {
         this.pasajes = pasajes;
+    }
+
+    public String calcularMenor() {
+        if (getEdad() < 18)
+            return "Si";
+        else
+            return "No";
     }
     
     

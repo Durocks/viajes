@@ -1,0 +1,7 @@
+Pasajero: Maria Pastor		Fecha de Nacimiento: 2/23/1988		Edad: 30	Sexo: Femenino
+	- Cantidad de puntos: 80
+Viajes para los que alcanza la cantidad de puntos: 
+Viaje	1	Tipo:	Terrestre	Categoria:	Semicama		Ciudad de Partida:	Buenos Aires	Ciudad de Destino:	Rosario			Fecha:	2/25/2018	Franja horaria:	Noche		Empresa del viaje:	FlechaBus		Precio por pasaje	750.0 $
+Viaje	2	Tipo:	Aereo		Categoria:	Economy			Ciudad de Partida:	Buenos Aires	Ciudad de Destino:	Hong Kong		Fecha:	3/26/2019	Franja horaria:	Noche		Empresa del viaje:	LAN			Precio por pasaje	1000.0 $	Numero de vuelo: AL930
+Viaje	3	Tipo:	Terrestre	Categoria:	Cama			Ciudad de Partida:	Buenos Aires	Ciudad de Destino:	Mar del Plata		Fecha:	1/15/2018	Franja horaria:	Maniana		Empresa del viaje:	Niandu del Sur		Precio por pasaje	1400.0 $
+Viaje	4	Tipo:	Terrestre	Categoria:	Cama			Ciudad de Partida:	Buenos Aires	Ciudad de Destino:	Bariloche		Fecha:	1/25/2018	Franja horaria:	Noche		Empresa del viaje:	Niandu del Sur		Precio por pasaje	1800.0 $
