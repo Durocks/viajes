@@ -1,0 +1,4 @@
+Empresa 2: Niandu del Sur
+P	Fecha: 0	20180115	Origen: Buenos Aires	Destino: Mar del Plata	Categoria: CamaLugares disponibles: Si
+A	Pasaje: 0	Asientos Disponibles: 79
+

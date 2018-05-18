@@ -1,0 +1,2 @@
+Pasaje 0;Pasajero: Jimena Gonzales;DNI: 36828394;Menor de 18: No;Vuelo 0	Origen: Buenos Aires	Destino: Rosario	Empresa: FlechaBus, CUIT 381461327	Fecha de partida: 2/25/2018	Franja horaria: Noche	Numero de asiento: 20D
+

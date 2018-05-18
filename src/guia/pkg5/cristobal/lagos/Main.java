@@ -43,6 +43,8 @@ public class Main {
                     + "5 - Ventas segun vendedor, que superan el argumento\n"
                     + "6 - Cambiar de vendedor activo\n"
                     + "7 - Generar informe de puntos\n"
+                    + "8 - Mostrar los números de ventas de los pasajes aéreos que no\n" +
+                            "hayan realizado escala en alguna de las tres localidades\n"
                     + "0 - Terminar");
             opcion = validator.validacionInt();
             switch (opcion){
@@ -67,6 +69,9 @@ public class Main {
                 case 7:
                     generarInformePuntos();
                     break;
+            case 8:
+                mostrarPorPantalla();
+                break;
                 case 0:
                     break;
                 default:
@@ -94,124 +99,143 @@ public class Main {
         ventas.add(new Venta(maxIdMasUno((List<Object>)(Object)ventas), vendedor));
         System.out.println("-------------------------------------------------------");
         List <Viaje> viajesCompatibles = viajes;
-        List<Viaje> backUpViajesCompatibles = new ArrayList();
-        System.out.println("Viajes disponibles: ");
-        buscador.printViajesCompatibles(viajesCompatibles);
+        
         String tipoDePasaje = "";
         while (viajesCompatibles.size() > 1 && 
                 !tipoDePasaje.toLowerCase().equals("aereo") && !tipoDePasaje.toLowerCase().equals("terrestre")){
             System.out.print("Se trata de un pasaje aereo o terrestre?: ");
             tipoDePasaje = std.nextLine();
         }
-        if (viajesCompatibles.size() > 1 && tipoDePasaje.toLowerCase().equals("aereo")){
-            viajesCompatibles = buscador.buscarViajesAereos(viajesCompatibles);
-            buscador.printViajesCompatibles(viajesCompatibles);
+        
+        int cantidadDePasajes = 0;
+        while (cantidadDePasajes < 1 || cantidadDePasajes > viajesCompatibles.get(0).lugaresDisponibles()){
+            System.out.print("Ingrese la cantidad de pasajes: ");
+            cantidadDePasajes = validator.validacionInt();
         }
-        if (viajesCompatibles.size() > 1 && tipoDePasaje.toLowerCase().equals("terrestre")){
-            viajesCompatibles = buscador.buscarViajesTerrestres(viajesCompatibles);
+        for (int i = 0; i<cantidadDePasajes; i++){
+            viajesCompatibles = viajes;
+            if (cantidadDePasajes > 1)
+                System.out.println("\nComenzaremos la adicion del pasaje " + (i+1) + ": ");
+            if (tipoDePasaje.toLowerCase().matches("aereo")){         
+                pasajes.add(new PasajeAereo(maxIdMasUno((List<Object>)(Object)pasajes), seleccionarPasajero()));
+                viajesCompatibles = buscador.buscarViajesAereos(viajesCompatibles);
+            }
+            else {
+                pasajes.add(new PasajeTerrestre(maxIdMasUno((List<Object>)(Object)pasajes), seleccionarPasajero()));
+                viajesCompatibles = buscador.buscarViajesTerrestres(viajesCompatibles);
+            }
+        List<Viaje> viajesFiltradosPorTipo = viajesCompatibles;
+        
+        do{
+            List<Viaje> backUpViajesCompatibles = new ArrayList();
+            viajesCompatibles = viajesFiltradosPorTipo;
+            System.out.println("Viajes disponibles: ");
             buscador.printViajesCompatibles(viajesCompatibles);
-        }
-        Calendar fechaPartida;
-        if (viajesCompatibles.size() > 1){
-            System.out.println("Ingrese la fecha de partida: ");
-            fechaPartida = validator.validacionFecha();
-            viajesCompatibles = buscador.buscarViajesPorFecha(viajesCompatibles, fechaPartida);
-            buscador.printViajesCompatibles(viajesCompatibles);
-        }
+            
+            Calendar fechaPartida;
+            if (viajesCompatibles.size() > 1){
+                System.out.println("Ingrese la fecha de partida: ");
+                fechaPartida = validator.validacionFecha();
+                viajesCompatibles = buscador.buscarViajesPorFecha(viajesCompatibles, fechaPartida);
+                buscador.printViajesCompatibles(viajesCompatibles);
+            }
 
-        if (viajesCompatibles.size() > 1){
-            System.out.print("Ingrese la ciudad de partida: ");
-            String ciudadDePartida = std.nextLine();
-            viajesCompatibles = buscador.buscarViajesPorCiudadDePartida(viajesCompatibles, ciudadDePartida);
-            buscador.printViajesCompatibles(viajesCompatibles);
-        }
-        if (viajesCompatibles.size() > 1){
-            System.out.print("Ingrese la ciudad de destino: ");
-            String ciudadDeDestino = std.nextLine();
-            viajesCompatibles = buscador.buscarViajesPorCiudadDeDestino(viajesCompatibles, ciudadDeDestino);
-            backUpViajesCompatibles = viajesCompatibles;
-            buscador.printViajesCompatibles(viajesCompatibles);
-        }
-        if (viajesCompatibles.size() > 1){
-            System.out.print("Ingrese la categoria deseada: ");
-            String categoria = std.nextLine();
-            viajesCompatibles = buscador.buscarViajesPorCategoria(viajesCompatibles, categoria);
-            buscador.printViajesCompatibles(viajesCompatibles);
-        }
-        String franjaHoraria = "";
-        if (viajesCompatibles.size() > 1){
-            while (!franjaHoraria.toLowerCase().equals("maniana") && !franjaHoraria.toLowerCase().equals("tarde")
-            && !franjaHoraria.toLowerCase().equals("noche")){
-                System.out.print("Ingrese la franja horaria (Maniana/Tarde/Noche): ");
-                franjaHoraria = std.nextLine();
+            if (viajesCompatibles.size() > 1){
+                System.out.print("Ingrese la ciudad de partida: ");
+                String ciudadDePartida = std.nextLine();
+                viajesCompatibles = buscador.buscarViajesPorCiudadDePartida(viajesCompatibles, ciudadDePartida);
+                buscador.printViajesCompatibles(viajesCompatibles);
             }
-            viajesCompatibles = buscador.buscarViajesPorFranjaHoraria(viajesCompatibles, franjaHoraria);
-            buscador.printViajesCompatibles(viajesCompatibles);
-        }
-        if (viajesCompatibles.isEmpty()){
-            System.out.println("No hay ningun viaje disponible actualmente que coincida con esos requisitos.");
-            System.out.println("-------------------------------------------------------");
-            if (!backUpViajesCompatibles.isEmpty()){
-                System.out.print("Desea seleccionar un viaje similar de categoria o franja horaria distinta? (Si/No): ");
-                if (validator.validacionSiNo())
-                    while (viajesCompatibles.size() != 1){
-                        buscador.printViajesCompatibles(backUpViajesCompatibles);
-                        int id = validator.validacionInt();
-                        for (Viaje v:backUpViajesCompatibles)
-                            if (v.getId() == id)
-                                viajesCompatibles.add(v);
+            if (viajesCompatibles.size() > 1){
+                System.out.print("Ingrese la ciudad de destino: ");
+                String ciudadDeDestino = std.nextLine();
+                viajesCompatibles = buscador.buscarViajesPorCiudadDeDestino(viajesCompatibles, ciudadDeDestino);
+                backUpViajesCompatibles = viajesCompatibles;
+                buscador.printViajesCompatibles(viajesCompatibles);
+            }
+            if (viajesCompatibles.size() > 1){
+                System.out.print("Ingrese la categoria deseada: ");
+                String categoria = std.nextLine();
+                viajesCompatibles = buscador.buscarViajesPorCategoria(viajesCompatibles, categoria);
+                buscador.printViajesCompatibles(viajesCompatibles);
+            }
+            String franjaHoraria = "";
+            if (viajesCompatibles.size() > 1){
+                while (!franjaHoraria.toLowerCase().equals("maniana") && !franjaHoraria.toLowerCase().equals("tarde")
+                && !franjaHoraria.toLowerCase().equals("noche")){
+                    System.out.print("Ingrese la franja horaria (Maniana/Tarde/Noche): ");
+                    franjaHoraria = std.nextLine();
+                }
+                viajesCompatibles = buscador.buscarViajesPorFranjaHoraria(viajesCompatibles, franjaHoraria);
+                buscador.printViajesCompatibles(viajesCompatibles);
+            }
+            if (viajesCompatibles.isEmpty()){
+                System.out.println("No hay ningun viaje disponible actualmente que coincida con esos requisitos.");
+                System.out.println("-------------------------------------------------------");
+                if (!backUpViajesCompatibles.isEmpty()){
+                    System.out.print("Desea seleccionar un viaje similar de categoria o franja horaria distinta? (Si/No): ");
+                    if (validator.validacionSiNo())
+                        while (viajesCompatibles.size() != 1){
+                            buscador.printViajesCompatibles(backUpViajesCompatibles);
+                            int id = validator.validacionInt();
+                            for (Viaje v:backUpViajesCompatibles)
+                                if (v.getId() == id)
+                                    viajesCompatibles.add(v);
+                        }
+                }
+            }
+            if (viajesCompatibles.size() > 1){
+                while (viajesCompatibles.size() > 1){
+                    buscador.printShortViajesCompatibles(viajesCompatibles);
+                    System.out.println("Hay mas de un viaje que coincide con esas caracteristicas.\n"
+                            + "Por favor ingrese el ID del viaje que mejor se adecue a su pasaje");
+                    int id = validator.validacionInt();
+                    for (Viaje v:viajesCompatibles){
+                        if (id == v.getId()){
+                            Viaje viaje = v;
+                            viajesCompatibles.clear();
+                            viajesCompatibles.add(viaje);
+                        }
                     }
+                }
             }
+            if (viajesCompatibles.size() == 1){
+                System.out.print("La cantidad de opciones se ha reducido a una sola. Desea tomarla? (Si/No): ");
+                if (validator.validacionSiNo()){
+                    pasajes.get(pasajes.size()-1).getVuelos().add(new Escala(
+                            maxIdMasUno((List<Object>)(Object)pasajes.get(pasajes.size()-1).getVuelos()),
+                            viajesCompatibles.get(0), seleccionarAsiento(viajesCompatibles.get(0)),
+                            seleccionarTratamientoEspecial(), pasajes.get(pasajes.size()-1)));
+                    pasajes.get(pasajes.size()-1).getVuelos().get(pasajes.get(pasajes.size()-1).getVuelos().
+                            size()-1).getAsiento().setVuelo(pasajes.get(pasajes.size()-1).getVuelos().
+                                    get(pasajes.get(pasajes.size()-1).getVuelos().size()-1));
+                    System.out.println("\nVuelo confirmado: ");
+                    buscador.printShortViajesCompatibles(viajesCompatibles);
+                    ventas.get(ventas.size()-1).getPasajes().add(pasajes.get(pasajes.size()-1));
+                    ventas.get(ventas.size()-1).setPrecioTotal(ventas.get(ventas.size()-1).getPrecioTotal() +
+                            pasajes.get(pasajes.size()-1).getVuelos().get(pasajes.get(pasajes.size()-1).
+                                    getVuelos().size()-1).getViaje().getPrecioPasaje());
+                    ventas.get(ventas.size()-1).setTotalPendiente(ventas.get(ventas.size()-1).getPrecioTotal());
+                    viajes.get(viajes.indexOf(viajesCompatibles.get(0))).getPasajeros().add(pasajes.get(pasajes.size()-1).getPasajero());
+                    pasajes.get(pasajes.size()-1).getPasajero().getPasajes().add(pasajes.get(pasajes.size()-1));
+                }
+                else{
+                    System.out.println("La reserva del pasaje ha sido cancelada.");
+                    ventas.remove(ventas.get(ventas.size()-1));
+                }
+            }
+            System.out.print("Desea agregar una escala al pasaje? (Si/No): ");
+            if (validator.validacionSiNo() == false)
+                break;
+            } while(true);
         }
-        if (viajesCompatibles.size() > 1){
-            while (viajesCompatibles.size() > 1){
-                buscador.printShortViajesCompatibles(viajesCompatibles);
-                System.out.println("Hay mas de un viaje que coincide con esas caracteristicas.\n"
-                        + "Por favor ingrese el ID del viaje que mejor se adecue a su pasaje");
-                int id = validator.validacionInt();
-                for (Viaje v:viajesCompatibles){
-                    if (id == v.getId()){
-                        Viaje viaje = v;
-                        viajesCompatibles.clear();
-                        viajesCompatibles.add(viaje);
-                    }
-                }
-            }
-        }
-        if (viajesCompatibles.size() == 1){
-            System.out.print("La cantidad de opciones se ha reducido a una sola. Desea tomarla? (Si/No): ");
-            if (validator.validacionSiNo()){
-                int cantidadDePasajes = 0;
-                while (cantidadDePasajes < 1 || cantidadDePasajes > viajesCompatibles.get(0).lugaresDisponibles()){
-                    System.out.print("Ingrese la cantidad de pasajes: ");
-                    cantidadDePasajes = validator.validacionInt();
-                }
-                for (int i = 0; i<cantidadDePasajes; i++){
-                if (viajesCompatibles.get(0) instanceof ViajeAereo)
-                    pasajes.add(new PasajeAereo(maxIdMasUno((List<Object>)(Object)pasajes), seleccionarAsiento(viajesCompatibles.get(0)), seleccionarPasajero(), viajesCompatibles.get(0), seleccionarTratamientoEspecial()));
-                if (viajesCompatibles.get(0) instanceof ViajeTerrestre)
-                    pasajes.add(new PasajeTerrestre(maxIdMasUno((List<Object>)(Object)pasajes), seleccionarAsiento(viajesCompatibles.get(0)), seleccionarPasajero(), viajesCompatibles.get(0), seleccionarTratamientoEspecial()));
-                pasajes.get(pasajes.size()-1).getAsiento().setPasaje(pasajes.get(pasajes.size()-1));
-                System.out.println("\nPasaje confirmado: ");
-                buscador.printShortViajesCompatibles(viajesCompatibles);
-                ventas.get(ventas.size()-1).getPasajes().add(pasajes.get(pasajes.size()-1));
-                ventas.get(ventas.size()-1).setPrecioTotal(ventas.get(ventas.size()-1).getPrecioTotal() +
-                        pasajes.get(pasajes.size()-1).getViaje().getPrecioPasaje());
-                ventas.get(ventas.size()-1).setTotalPendiente(ventas.get(ventas.size()-1).getPrecioTotal());
-                viajes.get(viajes.indexOf(viajesCompatibles.get(0))).getPasajeros().add(pasajes.get(pasajes.size()-1).getPasajero());
-                pasajes.get(pasajes.size()-1).getPasajero().getPasajes().add(pasajes.get(pasajes.size()-1));
-                }
-                pagarPasaje(pasajes.get(pasajes.size()-1), cantidadDePasajes);
-                for (int i = cantidadDePasajes; i > 0; i--){
-                    System.out.println(pasajes.get(pasajes.size()-i).toStringCompleto());
-                }
-                vendedor.getVentas().add(ventas.get(ventas.size()-1));
-            }
-            else{
-                System.out.println("La reserva del pasaje ha sido cancelada.");
-                ventas.remove(ventas.get(ventas.size()-1));
-            }
-        }
+        pagarPasaje(cantidadDePasajes);
+        vendedor.getVentas().add(ventas.get(ventas.size()-1));
+        
+
+        for (int i = cantidadDePasajes; i > 0; i--)
+            System.out.print(pasajes.get(pasajes.size()-i).toStringCompleto());
+        
         actualizarArchivos();
     }
     
@@ -293,43 +317,59 @@ public class Main {
         return validator.validacionSiNo();
     }
 
-    private static void pagarPasaje(Pasaje pasaje, int cantidad) {
-        double totalAPagar = pasaje.getViaje().getPrecioPasaje() * cantidad;
+    private static void pagarPasaje(int cantidad) {
+        double totalAPagar = 0;
+        Pasajero pasajeroPuntos = null;
+        List<Pasaje> pasajesAPagar = new ArrayList();
+        for (int i = cantidad; i>0;i--)
+            pasajesAPagar.add(pasajes.get(pasajes.size()-i));
+        for (Pasaje p:pasajesAPagar)
+            for (Escala e:p.getVuelos())
+                totalAPagar += e.getViaje().getPrecioPasaje();
+        DecimalFormat df = new DecimalFormat();
+                df.setMaximumFractionDigits(2);
+        int puntosGastados = 0;
+        for (Pasaje p:pasajesAPagar){
+            if (totalAPagar > 0){
+                System.out.print("Desea usar puntos del pasajero " + (p.getPasajero().getId()+1) + "? (Si/No): ");
+                boolean usarPuntos = validator.validacionSiNo();
+
+                if (usarPuntos == true){
+                    String fraccion = "";
+                    while (!fraccion.toLowerCase().matches("mitad") && !fraccion.toLowerCase().matches("todo")){
+                        System.out.print("Desea pagar todo con puntos o solo la mitad? (Mitad/Todo): ");
+                        fraccion = std.nextLine();
+                    }
+                    // Suponiendo que cada punto sean 50 pesos
+                    int totalMinimo = 0;
+                    if (fraccion.matches("todo"))
+                        totalMinimo = 0;
+                    else
+                        totalMinimo = (int) (totalAPagar/2);
+                    while (p.getPasajero().getPuntos() > 0 && totalAPagar > totalMinimo){
+                        totalAPagar = totalAPagar - 50;
+                        p.getPasajero().setPuntos(p.getPasajero().getPuntos()-1);
+                        puntosGastados ++;
+                    }
+                    if (totalAPagar < 0)
+                        totalAPagar = 0;
+                    
+                    System.out.println("Se han usado " + puntosGastados + " puntos, y resta pagar " +
+                        df.format(totalAPagar) + " $.");
+                    System.out.println("Restan " + p.getPasajero().getPuntos() + " puntos en la cuenta.");
+                }
+                else{
+                    System.out.println("Se han usado 0 puntos, y resta pagar " +
+                    df.format(totalAPagar) + " $.");
+                }
+            }
+        }
         String medioDePago = validator.validarMedioDePago();
-        ventas.get(ventas.size()-1).setFormaDePago(medioDePago.substring(0,1) + medioDePago.substring(1, medioDePago.length()));
-        System.out.print("Desea usar puntos? (Si/No): ");
-        boolean usarPuntos = validator.validacionSiNo();
+        ventas.get(ventas.size()-1).setFormaDePago(medioDePago.substring(0,1).toUpperCase()
+                + medioDePago.substring(1, medioDePago.length()).toLowerCase());
         if (medioDePago.toLowerCase().matches("tarjeta"))
             totalAPagar = totalAPagar * 1.15;
-        DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(2);
-        if (usarPuntos == true){
-            String fraccion = "";
-            while (!fraccion.toLowerCase().matches("mitad") && !fraccion.toLowerCase().matches("todo")){
-                System.out.print("Desea pagar todo con puntos o solo la mitad? (Mitad/Todo): ");
-                fraccion = std.nextLine();
-            }
-            // Suponiendo que cada punto sean 50 pesos
-            int puntosGastados = 0, totalMinimo = 0;
-            if (fraccion.matches("todo"))
-                totalMinimo = 0;
-            else
-                totalMinimo = (int) (totalAPagar/2);
-            while (pasaje.getPasajero().getPuntos() > 0 && totalAPagar > totalMinimo){
-                totalAPagar = totalAPagar - 50;
-                pasaje.getPasajero().setPuntos(pasaje.getPasajero().getPuntos()-1);
-                puntosGastados ++;
-            }
-            if (totalAPagar < 0)
-                totalAPagar = 0;
-            System.out.println("Se han usado " + puntosGastados + " puntos, y resta pagar " +
-                df.format(totalAPagar) + " $.");
-            System.out.println("Restan " + pasaje.getPasajero().getPuntos() + " puntos en la cuenta.");
-        }
-        else{
-            System.out.println("Se han usado 0 puntos, y resta pagar " +
-            df.format(totalAPagar) + " $.");
-        }
+        
         System.out.println("Presione ENTER cuando el cliente haya hecho el pago...");
         std.nextLine();
         ventas.get(ventas.size()-1).setTotalPendiente(0);
@@ -368,17 +408,27 @@ public class Main {
         if (opcion.toLowerCase().matches("devolverlo")){
             System.out.print("Se le cobrara una multa del 50% del precio del pasaje.\nDesea continuar (Si/No): ");
             if (validator.validacionSiNo()){
-                System.out.println("La multa a pagar es de " + pasaje.getViaje().getPrecioPasaje() * 0.5 +
+                System.out.println("La multa a pagar es de " + pasaje.getPrecioPasaje() * 0.5 +
                         " $\nPor favor pague ahora al cajero.");
                 System.out.println("Presione ENTER cuando el cliente haya pagado.");
                 std.nextLine();
-                pasaje.getAsiento().setOcupado(false);
+                for (Escala e:pasaje.getVuelos())
+                    e.getAsiento().setOcupado(false);
                 pasajes.remove(pasaje);
                 System.out.println("Su pasaje ha sido dado de baja. Muchas gracias.");
             }
         }
         if (opcion.toLowerCase().matches("modificarlo")){
-            Viaje viajeOriginal = pasaje.getViaje();
+            pasaje.toStringCompleto();
+            Escala escala = null;
+            while (escala == null){
+                System.out.print("Ingrese el id del vuelo del pasaje que desea modificar: ");
+                int inputIdVuelo = validator.validacionInt();
+                for (Escala v:pasaje.getVuelos())
+                    if (v.getId() == inputIdVuelo)
+                        escala = v;
+            }
+            Viaje viajeOriginal = escala.getViaje();
             String modificar = "";
             while (!modificar.toLowerCase().matches("fecha") && !modificar.toLowerCase().matches("asiento")
                     && !modificar.toLowerCase().matches("franja horaria")){
@@ -389,17 +439,17 @@ public class Main {
                 System.out.print("Ingrese la fecha deseada: ");
                 Calendar fecha = validator.validacionFecha();
                 List<Viaje> viajesPosibles = viajes;
-                    if (pasaje.getViaje() instanceof ViajeAereo)
+                    if (escala.getViaje() instanceof ViajeAereo)
                         viajesPosibles = buscador.buscarViajesAereos(viajesPosibles);
-                    if (pasaje.getViaje() instanceof ViajeTerrestre)
+                    if (escala.getViaje() instanceof ViajeTerrestre)
                         viajesPosibles = buscador.buscarViajesTerrestres(viajesPosibles);
                     
-                        viajesPosibles = buscador.buscarViajesPorCategoria(viajesPosibles, pasaje.getViaje().getCategoria());
-                        viajesPosibles = buscador.buscarViajesPorCiudadDePartida(viajesPosibles, pasaje.getViaje().getCiudadDePartida());
-                        viajesPosibles = buscador.buscarViajesPorCiudadDeDestino(viajesPosibles, pasaje.getViaje().getDestino());
-                        viajesPosibles = buscador.buscarViajesPorEmpresaDelViaje(viajesPosibles, pasaje.getViaje().getEmpresaDelViaje());
-                        viajesPosibles = buscador.buscarViajesPorFranjaHoraria(viajesPosibles, pasaje.getViaje().getFranjaHoraria());
-                        viajesPosibles = buscador.buscarPorAsiento(viajesPosibles, pasaje.getAsiento().getId());
+                        viajesPosibles = buscador.buscarViajesPorCategoria(viajesPosibles, escala.getViaje().getCategoria());
+                        viajesPosibles = buscador.buscarViajesPorCiudadDePartida(viajesPosibles, escala.getViaje().getCiudadDePartida());
+                        viajesPosibles = buscador.buscarViajesPorCiudadDeDestino(viajesPosibles, escala.getViaje().getDestino());
+                        viajesPosibles = buscador.buscarViajesPorEmpresaDelViaje(viajesPosibles, escala.getViaje().getEmpresaDelViaje());
+                        viajesPosibles = buscador.buscarViajesPorFranjaHoraria(viajesPosibles, escala.getViaje().getFranjaHoraria());
+                        viajesPosibles = buscador.buscarPorAsiento(viajesPosibles, escala.getAsiento().getId());
                         viajesPosibles = buscador.buscarViajesPorFecha(viajesPosibles, fecha);
                         if (viajesPosibles.isEmpty()){
                             System.out.println("No se encontro ningun otro viaje que coincida con todos los "
@@ -413,23 +463,23 @@ public class Main {
                             if (viajesPosibles.isEmpty())
                                 System.out.println("Ese id no coincide con el de ninguno de los viajes ofrecidos");
                             else{
-                                int idAsiento = pasaje.getAsiento().getId();
-                                pasaje.getAsiento().setOcupado(false);
-                                pasaje.setViaje(viajesPosibles.get(0));
-                                pasaje.setAsiento(pasaje.getViaje().getAsientos().get(idAsiento));
-                                pasaje.getAsiento().setOcupado(true);
+                                int idAsiento = escala.getAsiento().getId();
+                                escala.getAsiento().setOcupado(false);
+                                escala.setViaje(viajesPosibles.get(0));
+                                escala.setAsiento(escala.getViaje().getAsientos().get(idAsiento));
+                                escala.getAsiento().setOcupado(true);
                             }
                         }
             
-            if (pasaje.getViaje() == viajeOriginal)
+            if (escala.getViaje() == viajeOriginal)
                 System.out.println("La fecha no pudo ser cambiada, ya que no hay pasajes disponibles que cumplan con sus"
                         + "condiciones. Intente nuevamente con otros parametros.");
             else
                 System.out.println("La fecha ha sido cambiada exitosamente!");
             } // Fin del if de cambio segun fecha
             if (modificar.toLowerCase().matches("asiento")){
-                pasaje.getAsiento().setOcupado(false);
-                seleccionarAsiento(pasaje.getViaje());
+                escala.getAsiento().setOcupado(false);
+                seleccionarAsiento(escala.getViaje());
             }
             if (modificar.toLowerCase().matches("franja horaria")){
                 String franjaHoraria = "";
@@ -440,16 +490,16 @@ public class Main {
                 }
                 
                 List<Viaje> viajesPosibles = viajes;
-                viajesPosibles = buscador.buscarPorAsiento(viajesPosibles, pasaje.getAsiento().getId());
-                if (pasaje.getViaje() instanceof ViajeAereo)
+                viajesPosibles = buscador.buscarPorAsiento(viajesPosibles, escala.getAsiento().getId());
+                if (escala.getViaje() instanceof ViajeAereo)
                     viajesPosibles = buscador.buscarViajesAereos(viajesPosibles);
-                if (pasaje.getViaje() instanceof ViajeTerrestre)
+                if (escala.getViaje() instanceof ViajeTerrestre)
                     viajesPosibles = buscador.buscarViajesTerrestres(viajesPosibles);
-                viajesPosibles = buscador.buscarViajesPorCategoria(viajesPosibles, pasaje.getViaje().getCategoria());
-                viajesPosibles = buscador.buscarViajesPorCiudadDePartida(viajesPosibles, pasaje.getViaje().getCiudadDePartida());
-                viajesPosibles = buscador.buscarViajesPorCiudadDeDestino(viajesPosibles, pasaje.getViaje().getDestino());
-                viajesPosibles = buscador.buscarViajesPorEmpresaDelViaje(viajesPosibles, pasaje.getViaje().getEmpresaDelViaje());
-                viajesPosibles = buscador.buscarViajesPorFecha(viajesPosibles, pasaje.getViaje().getFecha());
+                viajesPosibles = buscador.buscarViajesPorCategoria(viajesPosibles, escala.getViaje().getCategoria());
+                viajesPosibles = buscador.buscarViajesPorCiudadDePartida(viajesPosibles, escala.getViaje().getCiudadDePartida());
+                viajesPosibles = buscador.buscarViajesPorCiudadDeDestino(viajesPosibles, escala.getViaje().getDestino());
+                viajesPosibles = buscador.buscarViajesPorEmpresaDelViaje(viajesPosibles, escala.getViaje().getEmpresaDelViaje());
+                viajesPosibles = buscador.buscarViajesPorFecha(viajesPosibles, escala.getViaje().getFecha());
                 viajesPosibles = buscador.buscarViajesPorFranjaHoraria(viajesPosibles, franjaHoraria);
                 
                 if (!viajesPosibles.isEmpty()){
@@ -459,11 +509,11 @@ public class Main {
                             if (viajesPosibles.isEmpty())
                                 System.out.println("Ese id no coincide con el de ninguno de los viajes ofrecidos");
                             else{
-                                int idAsiento = pasaje.getAsiento().getId();
-                                pasaje.getAsiento().setOcupado(false);
-                                pasaje.setViaje(viajesPosibles.get(0));
-                                pasaje.setAsiento(pasaje.getViaje().getAsientos().get(idAsiento));
-                                pasaje.getAsiento().setOcupado(true);
+                                int idAsiento = escala.getAsiento().getId();
+                                escala.getAsiento().setOcupado(false);
+                                escala.setViaje(viajesPosibles.get(0));
+                                escala.setAsiento(escala.getViaje().getAsientos().get(idAsiento));
+                                escala.getAsiento().setOcupado(true);
                             }
                 }
                 else
@@ -496,7 +546,8 @@ public class Main {
             writer.flush();
             writer = new BufferedWriter(new FileWriter(AsientosAsignadosFile, false));
             for (Pasaje p:pasajes){
-                writer.write(p.getAsiento().toStringVendedor());
+                for (Escala e:p.getVuelos())
+                writer.write(e.getAsiento().toStringVendedor());
             }
             writer.flush();
             new FileWriter(pasajerosFile, false).write("");
@@ -552,14 +603,16 @@ public class Main {
                 for (Viaje v:edv.getViajes()){
                     for (Pasajero p1:v.getPasajeros()){
                         for (Pasaje p2:p1.getPasajes()){
-                            writer.write("P\t" + "Fecha: " + p2.getId() + "\t" +
-                                    validator.imprimirFecha3(p2.getViaje().getFecha()) +
-                                    "\tOrigen: " + p2.getViaje().getCiudadDePartida() +
-                                    "\tDestino: " + p2.getViaje().getDestino() +
-                                    "\tCategoria: " + p2.getViaje().getCategoria() +
-                                    "Lugares disponibles: " + validator.disponibleSiNo(p2.getViaje().lugaresDisponibles()) + "\n");
-                            writer.write("A" + "\tPasaje: " + p2.getId() +
-                                    "\tAsientos Disponibles: " + p2.getViaje().lugaresDisponibles() + "\n\n");
+                            for (Escala escala:p2.getVuelos()){
+                            writer.write("P\t" + "Fecha: " + escala.getId() + "\t" +
+                                    validator.imprimirFecha3(escala.getViaje().getFecha()) +
+                                    "\tOrigen: " + escala.getViaje().getCiudadDePartida() +
+                                    "\tDestino: " + escala.getViaje().getDestino() +
+                                    "\tCategoria: " + escala.getViaje().getCategoria() +
+                                    "Lugares disponibles: " + validator.disponibleSiNo(escala.getViaje().lugaresDisponibles()) + "\n");
+                            writer.write("A" + "\tPasaje: " + escala.getId() +
+                                    "\tAsientos Disponibles: " + escala.getViaje().lugaresDisponibles() + "\n\n");
+                            }
                         }
                     }
                 }
@@ -579,10 +632,12 @@ public class Main {
                     v.getFecha().get(Calendar.YEAR) == GregorianCalendar.getInstance().get(Calendar.YEAR)){
                 String informe = v.toString();
                 for (Pasaje p:v.getPasajes()){
-                    informe +=  "\n\t- " + p.getPasajero().toString() +
-                            "\n\t\t- " + p.getAsiento().toString() + 
+                    informe +=  "\n\t- " + p.getPasajero().toString() + 
                             "\n\t- " + "Forma de pago: " + v.getFormaDePago() +
-                            "\n\t- " + "Puntos correspondientes: " + v.getPuntosCorrespondientes() + "\n";
+                            "\n\t- " + "Puntos correspondientes: " + (v.getPuntosCorrespondientes()/v.getPasajes().size()) + "\n";
+                    for (Escala escala:p.getVuelos()){
+                        informe += "\t\t" + "Vuelo " + v.getId() + "\tAsiento: "+ escala.getAsiento();
+                    }
                 }
                 System.out.println("-------------------------------------------------------");
                 System.out.println(informe);
@@ -647,5 +702,31 @@ public class Main {
             }
         }
         System.out.println("El informe ha sido generado.");
+    }
+
+    private static void mostrarPorPantalla() {
+        if (ventas.size() == 0){
+            System.out.println("Aun no hay ventas");
+            return;
+        }
+        List<String> localidades = new ArrayList();
+        for (int i=0; i<3;i++){
+            System.out.print("Ingrese el nombre de la localidad " + (i+1) + ": ");
+            localidades.add(std.nextLine());
+        }
+        
+        for (Venta v:ventas){
+            boolean pasoPorLocalidades = false;
+            for (Pasaje p:v.getPasajes()){
+                for (Escala escala:p.getVuelos()){
+                    for (String localidad:localidades){
+                        if (escala.getViaje().getDestino().matches(localidad))
+                            pasoPorLocalidades = true;
+                    }
+                }
+            }
+            if (pasoPorLocalidades == false)
+                System.out.println("La venta" + v.getId() + "no paso por esas localidades.");
+        }
     }
 }

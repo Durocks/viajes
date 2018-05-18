@@ -57,6 +57,8 @@ public class Venta {
 
     public void setPuntosCorrespondientes(int puntosCorrespondientes) {
         this.puntosCorrespondientes = puntosCorrespondientes;
+        for (Pasaje p:this.pasajes)
+            p.getPasajero().setPuntos(p.getPasajero().getPuntos() + puntosCorrespondientes / this.pasajes.size());
     }
 
     public String getFormaDePago() {
