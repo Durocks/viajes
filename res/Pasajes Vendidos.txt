@@ -2,4 +2,3 @@ Pasaje 0;Pasajero: Jimena Gonzales;DNI: 36828394;Menor de 18: No;Vuelo 0	Origen:
 ;Vuelo 1	Origen: Buenos Aires	Destino: Mar del Plata	Empresa: Niandu del Sur, CUIT 2147389247	Fecha de partida: 1/15/2018	Franja horaria: Maniana	Numero de asiento: 20D
 
 Pasaje 1;Pasajero: Maria Pastor	;DNI: 34938494;Menor de 18: No;Vuelo 0	Origen: Buenos Aires	Destino: Mar del Plata	Empresa: Niandu del Sur, CUIT 2147389247	Fecha de partida: 1/15/2018	Franja horaria: Maniana	Numero de asiento: 20C
-

@@ -1,1 +1,1 @@
-8:11:18 am:	Venta 0		Vendedor: Cristobal Lagos	Fecha: 5/18/2018		PrecioTotal: 3550.0 $	Total Pendiente: 0.0 $
+8:24:27 am:	Venta 0		Vendedor: Cristobal Lagos	Fecha: 5/18/2018		PrecioTotal: 3550.0 $	Total Pendiente: 0.0 $
