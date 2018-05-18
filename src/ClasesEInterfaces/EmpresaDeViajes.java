@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author cristolagos
  */
-public class EmpresaDeViajes {
+public class EmpresaDeViajes  implements getId{
     private int id;
     private String nombre;
     private long cuit;

@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author cristolagos
  */
-public abstract class Viaje {
+public abstract class Viaje  implements getId{
     protected int id;
     protected String categoria;
     protected String ciudadDePartida;

@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author cristolagos
  */
-public class Vendedor {
+public class Vendedor  implements getId{
     private int id;
     private String nombre;
     private String apellido;

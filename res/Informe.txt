@@ -1,5 +1,13 @@
-Venta 0		Vendedor: Cristobal Lagos	Fecha: 5/3/2018		PrecioTotal: 750.0 $	Total Pendiente: 0.0 $
+Venta 0		Vendedor: Cristobal Lagos	Fecha: 5/18/2018		PrecioTotal: 3550.0 $	Total Pendiente: 0.0 $
 	- Pasajero: Jimena Gonzales		Fecha de Nacimiento: 9/28/1992		Edad: 25	Sexo: Masculino
-		- Asiento 0	Descripcion:	1A	Ocupado: Si	Viaje:	Buenos Aires a Rosario		Pasaje:	0
-		- Forma de pago: tarjeta
-		- Puntos correspondientes: 2
+	- Forma de pago: Efectivo
+	- Puntos correspondientes: 7
+		Vuelo 0	Asiento: Asiento 79	Descripcion:	20D	Ocupado: Si	Viaje:	Buenos Aires a Rosario		Pasaje:	0		Vuelo 0	Asiento: Asiento 79	Descripcion:	20D	Ocupado: Si	Viaje:	Buenos Aires a Mar del Plata		Pasaje:	1
+	- Pasajero: Jimena Gonzales		Fecha de Nacimiento: 9/28/1992		Edad: 25	Sexo: Masculino
+	- Forma de pago: Efectivo
+	- Puntos correspondientes: 7
+		Vuelo 0	Asiento: Asiento 79	Descripcion:	20D	Ocupado: Si	Viaje:	Buenos Aires a Rosario		Pasaje:	0		Vuelo 0	Asiento: Asiento 79	Descripcion:	20D	Ocupado: Si	Viaje:	Buenos Aires a Mar del Plata		Pasaje:	1
+	- Pasajero: Maria Pastor		Fecha de Nacimiento: 2/23/1988		Edad: 30	Sexo: Femenino
+	- Forma de pago: Efectivo
+	- Puntos correspondientes: 7
+		Vuelo 0	Asiento: Asiento 78	Descripcion:	20C	Ocupado: Si	Viaje:	Buenos Aires a Mar del Plata		Pasaje:	0

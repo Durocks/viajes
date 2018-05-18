@@ -1,0 +1,4 @@
+Empresa 1: FlechaBus
+P	Fecha: 0	20181125	Origen: Buenos Aires	Destino: Rosario	Categoria: SemicamaLugares disponibles: Si
+A	Pasaje: 0	Asientos Disponibles: 79
+

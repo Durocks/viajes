@@ -1,0 +1,1 @@
+Asiento 79	Descripcion:	20D	Pasajero: Jimena Gonzales	Viaje:	Buenos Aires a RosarioAsiento 79	Descripcion:	20D	Pasajero: Jimena Gonzales	Viaje:	Buenos Aires a Mar del PlataAsiento 78	Descripcion:	20C	Pasajero: Maria Pastor	Viaje:	Buenos Aires a Mar del Plata

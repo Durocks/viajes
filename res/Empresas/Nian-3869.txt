@@ -1,0 +1,16 @@
+Empresa 2: Niandu del Sur
+P	Fecha: 0	20181125	Origen: Buenos Aires	Destino: Rosario	Categoria: SemicamaLugares disponibles: Si
+A	Pasaje: 0	Asientos Disponibles: 79
+
+P	Fecha: 1	20180115	Origen: Buenos Aires	Destino: Mar del Plata	Categoria: CamaLugares disponibles: Si
+A	Pasaje: 1	Asientos Disponibles: 78
+
+P	Fecha: 0	20181125	Origen: Buenos Aires	Destino: Rosario	Categoria: SemicamaLugares disponibles: Si
+A	Pasaje: 0	Asientos Disponibles: 79
+
+P	Fecha: 1	20180115	Origen: Buenos Aires	Destino: Mar del Plata	Categoria: CamaLugares disponibles: Si
+A	Pasaje: 1	Asientos Disponibles: 78
+
+P	Fecha: 0	20180115	Origen: Buenos Aires	Destino: Mar del Plata	Categoria: CamaLugares disponibles: Si
+A	Pasaje: 0	Asientos Disponibles: 78
+

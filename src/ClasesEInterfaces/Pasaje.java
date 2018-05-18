@@ -1,20 +1,32 @@
 package ClasesEInterfaces;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Pasaje implements getId{
     protected int id;
-    protected Asiento asiento;
     protected Pasajero pasajero;
-    protected Viaje viaje;
-    protected boolean tratamientoEspecial;
+    protected List<Escala> vuelos;
     
-    public Pasaje(){super();}
+    public Pasaje(){
+        super();
+        this.vuelos = new ArrayList();
+    }
 
-    public Pasaje(int id, Asiento asiento, Pasajero pasajero, Viaje viaje, boolean tratamientoEspecial) {
+    public Pasaje(int id, Pasajero pasajero) {
+        this.vuelos = new ArrayList();
         this.id = id;
-        this.asiento = asiento;
         this.pasajero = pasajero;
-        this.viaje = viaje;
-        this.tratamientoEspecial = tratamientoEspecial;
+    }
+    
+    public Pasaje(int id, Pasajero pasajero, List<Escala> vuelos) {
+        this.id = id;
+        this.pasajero = pasajero;
+        this.vuelos = vuelos;
+    }
+
+    public void setVuelos(List<Escala> vuelos) {
+        this.vuelos = vuelos;
     }
 
     @Override
@@ -30,59 +42,46 @@ public abstract class Pasaje implements getId{
         this.pasajero = pasajero;
     }
 
-    public void setViaje(Viaje viaje) {
-        this.viaje = viaje;
-    }
-
-    public Asiento getAsiento() {
-        return asiento;
-    }
-    
-    public void setAsiento(Asiento asiento) {
-        this.asiento = asiento;
-    }    
-
     public Pasajero getPasajero() {
         return pasajero;
     }
 
-    public Viaje getViaje() {
-        return viaje;
+    public List<Escala> getVuelos() {
+        return vuelos;
     }
 
     @Override
     public String toString() {
-        return "Pasaje " + id + "\tAsiento:\t" + asiento + "\tPasajero:\t" + pasajero.getNombre() +
-                " "+ pasajero.getApellido() + "\tViaje:\t" + viaje.getTrajecto() + "\tTratamientos Especiales:\t"
-                + new Validator().printSiNo(tratamientoEspecial);
-    }
-
-    public void setTratamientoEspecial(boolean tratamientoEspecial) {
-        this.tratamientoEspecial = tratamientoEspecial;
-    }
-
-    public boolean isTratamientoEspecial() {
-        return tratamientoEspecial;
+        String text = "Pasaje " + id + "\tPasajero:\t" + pasajero.getNombre() +
+                " "+ pasajero.getApellido() + "\n";
+        for (Escala e:this.vuelos)
+            text += "\t" + e.toString() + "\n";
+        return text;
     }
 
     public String toStringCompleto() {
-        return "Pasaje " + id + "\tOrigen: " + viaje.getCiudadDePartida() + "\tDestino: " + viaje.getDestino() + 
-                "\tEmpresa: " + viaje.getEmpresaDelViaje().getNombre() + ", CUIT " + viaje.getEmpresaDelViaje().getCuit() +
-                "\tFecha de partida: " + new Validator().imprimirFecha(viaje.getFecha()) + "\tFranja horaria: " +
-                viaje.getFranjaHoraria() + "\tNumero de asiento: " + asiento.getDescripcion() + "\t" + 
+        String text = "Pasaje " + id +  "\t" + 
                 new Validator().align("Pasajero: " + pasajero.getNombre() + " " + pasajero.getApellido(), 3) +
-                "\tDNI: " + pasajero.getDocumento() + 
-                "\tMenor de 18: " + pasajero.calcularMenor();
+                "\tDNI: " + pasajero.getDocumento() + "\tMenor de 18: " + pasajero.calcularMenor();
+        for (Escala e:this.vuelos)
+            text += "\t" + e.toStringCompleto() + "\n";
+        return text;
     }
     
     public String toStringCompletoPuntoYComa() {
-        return "Pasaje " + id + "; Origen: " + viaje.getCiudadDePartida() + "; Destino: " + viaje.getDestino() + 
-                "; Empresa: " + viaje.getEmpresaDelViaje().getNombre() + ", CUIT " + viaje.getEmpresaDelViaje().getCuit() +
-                "; Fecha de partida: " + new Validator().imprimirFecha(viaje.getFecha()) + "; Franja horaria: " +
-                viaje.getFranjaHoraria() + "; Numero de asiento: " + asiento.getDescripcion() + "; " + 
+        String text = "Pasaje " + id +  ";" + 
                 new Validator().align("Pasajero: " + pasajero.getNombre() + " " + pasajero.getApellido(), 3) +
-                "; DNI: " + pasajero.getDocumento() + 
-                "; Menor de 18: " + pasajero.calcularMenor();
+                ";DNI: " + pasajero.getDocumento() + ";Menor de 18: " + pasajero.calcularMenor();
+        for (Escala e:this.vuelos)
+            text += ";" + e.toStringCompleto() + "\n";
+        return text;
+    }
+
+    public double getPrecioPasaje() {
+        double total = 0;
+        for (Escala v:this.vuelos)
+            total += v.getViaje().getPrecioPasaje();
+        return total;
     }
     
     

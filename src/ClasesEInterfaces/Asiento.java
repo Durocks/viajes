@@ -5,7 +5,7 @@ public class Asiento implements getId{
     private String descripcion;
     private boolean ocupado;
     private Viaje viaje;
-    private Pasaje pasaje;
+    private Escala vuelo;
 
     public boolean isOcupado() {
         return ocupado;
@@ -13,12 +13,19 @@ public class Asiento implements getId{
 
     public Asiento() {}
 
-    public Asiento(int id, String descripcion, boolean ocupado, Viaje viaje, Pasaje pasaje) {
+    public Asiento(int id, String descripcion, boolean ocupado, Viaje viaje, Escala vuelo) {
         this.id = id;
         this.descripcion = descripcion;
         this.ocupado = ocupado;
         this.viaje = viaje;
-        this.pasaje = pasaje;
+        this.vuelo = vuelo;
+    }
+    
+    public Asiento(int id, String descripcion, boolean ocupado, Viaje viaje) {
+        this.id = id;
+        this.descripcion = descripcion;
+        this.ocupado = ocupado;
+        this.viaje = viaje;
     }
 
     public void setViaje(Viaje viaje) {
@@ -29,12 +36,8 @@ public class Asiento implements getId{
         return viaje;
     }
 
-    public void setPasaje(Pasaje pasaje) {
-        this.pasaje = pasaje;
-    }
-
-    public Pasaje getPasaje() {
-        return pasaje;
+    public Escala getVuelo() {
+        return vuelo;
     }
 
     @Override
@@ -62,19 +65,23 @@ public class Asiento implements getId{
     public String toString() {
         return "Asiento " + id + "\tDescripcion:\t" + descripcion + "\tOcupado: " +
                 new Validator().printSiNo(ocupado) + "\tViaje:\t" + viaje.getTrajecto() +
-                "\t\tPasaje:\t" + this.pasajeToString();
+                "\t\tPasaje:\t" + this.vueloToString();
     }
     
     public String toStringVendedor(){
         return "Asiento " + id + "\tDescripcion:\t" + descripcion + "\tPasajero: " +
-                pasaje.getPasajero().getNombre() + " " + pasaje.getPasajero().getApellido() +
+                vuelo.getPasaje().getPasajero().getNombre() + " " + vuelo.getPasaje().getPasajero().getApellido() +
                 "\tViaje:\t" + viaje.getTrajecto(); 
     }
 
-    private String pasajeToString() {
-        if (this.pasaje == null)
+    private String vueloToString() {
+        if (this.vuelo == null)
             return "Ninguno";
         else
-            return this.pasaje.id + "";
+            return this.vuelo.getId() + "";
+    }
+
+    public void setVuelo(Escala vuelo) {
+        this.vuelo = vuelo;
     }
 }

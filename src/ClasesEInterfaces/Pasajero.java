@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author cristolagos
  */
-public class Pasajero {
+public class Pasajero  implements getId{
     private int id;
     private int documento;
     private Calendar nacimiento;
